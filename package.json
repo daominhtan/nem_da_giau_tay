@@ -1,0 +1,14 @@
+{
+  "name": "nem_da_giau_tay",
+  "version": "1.0.0",
+  "description": "Ghét nhau ném đá - Online 2 player game",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.7.4"
+  }
+}

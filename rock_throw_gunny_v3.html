@@ -168,6 +168,7 @@ input[type=text]::placeholder{color:rgba(255,255,255,.4)}
   </div>
 </div>
 
+<script src="/socket.io/socket.io.js"></script>
 <script>
 const CHARS=[
   {id:'monkey',name:'Khỉ Troll',emoji:'🐒',hp:100,proj:'🍌',skill:'Crit +15%',stats:{lo:15,hi:25,crit:.15,cm:2}},
@@ -190,6 +191,136 @@ let G={
   parts:[],efx:[],throwing:false,pollInt:null,raf:null
 };
 
+// ── SOCKET.IO ──
+let socket=null;
+function initSocket(){
+  if(socket)return;
+  socket=io();
+  socket.on('roomCreated',({code})=>{
+    G.roomCode=code;G.mode='online';G.myPlayer=1;
+    document.getElementById('drc').textContent=code;
+    showS('sw');
+  });
+  socket.on('roomJoined',({code})=>{
+    G.roomCode=code;G.mode='online';G.myPlayer=2;
+    // Chờ server báo game start, không gọi startGame() ở đây
+  });
+  socket.on('playerJoined',({charId})=>{
+    G.selChar[2]=CHARS.find(c=>c.id===charId);
+    socket.emit('startGame');
+  });
+  socket.on('gameStart',({p1Char,p2Char,turn})=>{
+    G.selChar[1]=CHARS.find(c=>c.id===p1Char);
+    G.selChar[2]=CHARS.find(c=>c.id===p2Char);
+    G.turn=turn;
+    startGame();
+  });
+  socket.on('playerJoined',({charId})=>{
+    G.selChar[2]=CHARS.find(c=>c.id===charId);
+    G.selChar[1]=CHARS.find(c=>c.id===G.P[1].char.id);
+    socket.emit('startGame');
+  });
+  socket.on('gameStart',({p1Char,p2Char,turn})=>{
+    G.selChar[1]=CHARS.find(c=>c.id===p1Char);
+    G.selChar[2]=CHARS.find(c=>c.id===p2Char);
+    G.turn=turn;
+    startGame();
+  });
+  socket.on('gameAction',(data)=>handleRemoteAction(data));
+  socket.on('turnUpdate',({turn})=>{
+    G.turn=turn;
+    G.phase='aim';G.angle=45;G.throwing=false;
+    updatePhase();updateTurnUI();updateItemUI();
+    document.getElementById('aimtxt').textContent='🎯 Di chuột chọn góc, click chốt';
+    addLog(`━━ Lượt ${G.P[G.turn].char.emoji} ${G.P[G.turn].name} ━━`);
+  });
+  socket.on('opponentDisconnected',()=>{
+    msg('Đối thủ đã ngắt kết nối!');
+    showS('sl');
+  });
+  socket.on('error',(e)=>msg(e));
+}
+
+function createRoom(){
+  if(!G.selChar[1]){msg('Chọn nhân vật trước!');return;}
+  initSocket();
+  socket.emit('createRoom',{charId:G.selChar[1].id});
+}
+function joinRoom(){
+  const code=document.getElementById('jc').value.toUpperCase().trim();
+  if(code.length!==4){msg('Nhập mã 4 ký tự!');return;}
+  if(!G.selChar[1]){msg('Chọn nhân vật trước!');return;}
+  initSocket();
+  socket.emit('joinRoom',{code,charId:G.selChar[1].id});
+}
+function cancelWait(){
+  if(G.roomCode&&socket){socket.emit('leave',G.roomCode);G.roomCode=null;}
+  showS('sl');
+}
+
+// ── NETWORK GAME ACTIONS ──
+function emitAction(type,data={}){
+  if(G.mode==='online'&&socket){
+    socket.emit('gameAction',{type,player:G.myPlayer,...data});
+  }
+}
+function handleRemoteAction(data){
+  if(data.player===G.myPlayer)return;
+  const opp=data.player;
+  if(data.type==='fire'){
+    G.throwing=true;G.phase='flying';updatePhase();
+    addLog(`💥 Lực ${Math.round(data.power)}% — phóng!`);
+    remoteFire(opp,data.angle,data.power);
+  } else if(data.type==='bomb'){
+    const p=G.P[data.player];
+    const dp=data.player===1?2:1,D=G.P[dp];
+    D.hp=Math.max(0,D.hp-data.dmg);
+    const tx=dp===1?P1X:P2X;
+    G.efx.push({txt:`💣 -${data.dmg}!`,x:tx,y:GY-72,life:70,col:'#f59e0b',sz:25});
+    addLog(`💣 ${p.name} ném BOM! -${data.dmg}HP`);burst(tx,GY-38);updateHUD();
+    if(D.hp<=0)setTimeout(()=>endGame(data.player),600);
+  } else if(data.type==='heal'){
+    const p=G.P[data.player];
+    p.hp=Math.min(p.maxHp,p.hp+data.heal);
+    const px=data.player===1?P1X:P2X;
+    G.efx.push({txt:`+${data.heal}HP 💊`,x:px,y:GY-72,life:60,col:'#6bcb77',sz:20});
+    addLog(`💊 ${p.name} hồi ${data.heal}HP`);updateHUD();
+  } else if(data.type==='shield'){
+    G.P[data.player].shield=true;
+    const px=data.player===1?P1X:P2X;
+    G.efx.push({txt:'🛡️ SHIELD',x:px,y:GY-72,life:60,col:'#60a5fa',sz:20});
+    addLog(`🛡️ ${G.P[data.player].name} kích hoạt khiên`);
+  }
+}
+
+function remoteFire(pid,angle,power){
+  const p=G.P[pid];
+  if(p.stunned){addLog(`😵 ${p.name} choáng, mất lượt!`);p.stunned=false;G.throwing=false;return;}
+  const dir=pid===1?1:-1;
+  const fx=pid===1?P1X+16:P2X-16,fy=GY-36;
+  const ang=angle*Math.PI/180;
+  let px=fx,py=fy;
+  let vx=Math.cos(ang)*dir*power*.28,vy=-Math.sin(ang)*power*.28;
+  const proj=p.char.proj,tx=pid===1?P2X:P1X;
+  let steps=0;
+  function step(){
+    px+=vx;py+=vy;vy+=.5;steps++;
+    G.parts.push({x:px,y:py,vx:0,vy:0,e:proj,a:.9,sz:26});
+    const hit=Math.abs(px-tx)<55&&py>GY-92&&py<GY+8;
+    const miss=py>GY+8||steps>130||px<-60||px>canvas.width+60;
+      if(hit){
+        resolveHit(pid);G.throwing=false;burst(tx,GY-38);
+      } else if(miss){
+      G.throwing=false;
+      addLog(`💨 ${p.name} ném trượt!`);
+      G.efx.push({txt:'MISS!',x:Math.max(60,Math.min(780,px)),y:Math.min(py,GY-12),life:50,col:'#94a3b8',sz:20});
+    } else requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+function startLocal(){if(!G.selChar[1]){G.selChar[1]=CHARS[0];G.selChar[2]=CHARS[1];}G.mode='local';G.myPlayer=1;startGame();}
+
 // stars bg
 (()=>{const c=document.getElementById('stars');for(let i=0;i<55;i++){const s=document.createElement('div');s.className='star';const z=Math.random()*2.5+.5;s.style.cssText=`width:${z}px;height:${z}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${Math.random()*3+1}s;animation-delay:${Math.random()*3}s`;c.appendChild(s);}})();
 
@@ -204,37 +335,12 @@ function buildGrid(){
   });
 }
 
-function genCode(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';return Array.from({length:4},()=>c[~~(Math.random()*c.length)]).join('');}
-
-function createRoom(){
-  if(!G.selChar[1]){msg('Chọn nhân vật trước!');return;}
-  G.roomCode=genCode();G.mode='online';
-  localStorage.setItem('gnnd_'+G.roomCode,JSON.stringify({p1:G.selChar[1].id,p1r:true,p2:null,p2r:false}));
-  document.getElementById('drc').textContent=G.roomCode;
-  showS('sw');
-  G.pollInt=setInterval(()=>{
-    const rs=localStorage.getItem('gnnd_'+G.roomCode);if(!rs)return;
-    const r=JSON.parse(rs);if(r.p2r){clearInterval(G.pollInt);G.myPlayer=1;G.selChar[2]=CHARS.find(c=>c.id===r.p2);startGame();}
-  },1000);
-}
-function joinRoom(){
-  const code=document.getElementById('jc').value.toUpperCase().trim();
-  if(code.length!==4){msg('Nhập mã 4 ký tự!');return;}
-  if(!G.selChar[1]){msg('Chọn nhân vật trước!');return;}
-  const rs=localStorage.getItem('gnnd_'+code);if(!rs){msg('Không tìm thấy phòng!');return;}
-  const r=JSON.parse(rs);if(r.p2r){msg('Phòng đầy rồi!');return;}
-  r.p2=G.selChar[1].id;r.p2r=true;localStorage.setItem('gnnd_'+code,JSON.stringify(r));
-  G.roomCode=code;G.mode='online';G.myPlayer=2;G.selChar[2]=G.selChar[1];G.selChar[1]=CHARS.find(c=>c.id===r.p1);startGame();
-}
-function cancelWait(){clearInterval(G.pollInt);if(G.roomCode)localStorage.removeItem('gnnd_'+G.roomCode);showS('sl');}
-function startLocal(){if(!G.selChar[1]){G.selChar[1]=CHARS[0];G.selChar[2]=CHARS[1];}G.mode='local';G.myPlayer=1;startGame();}
-
 // ── GAME ──
 function startGame(){
   const c1=G.selChar[1],c2=G.selChar[2];
   G.P[1]={char:c1,hp:c1.hp,maxHp:c1.hp,name:c1.name+' P1',items:{bomb:2,heal:1,shield:1},shield:false,burn:0,stunned:false};
   G.P[2]={char:c2,hp:c2.hp,maxHp:c2.hp,name:c2.name+' P2',items:{bomb:2,heal:1,shield:1},shield:false,burn:0,stunned:false};
-  G.turn=1;G.phase='aim';G.angle=45;G.power=5;G.powerDir=1;G.parts=[];G.efx=[];G.throwing=false;
+  G.phase='aim';G.angle=45;G.power=5;G.powerDir=1;G.parts=[];G.efx=[];G.throwing=false;
   document.getElementById('pn1').textContent=c1.emoji+' '+G.P[1].name;
   document.getElementById('pn2').textContent=c2.emoji+' '+G.P[2].name;
   showS('sg');updateHUD();updatePhase();updateTurnUI();
@@ -415,6 +521,7 @@ function drawPowerRing(){
 // ── INPUT ──
 function onMove(e){
   if(G.phase!=='aim'||G.throwing)return;
+  if(G.mode==='online'&&G.turn!==G.myPlayer)return;
   const r=canvas.getBoundingClientRect();
   const sx=canvas.width/r.width;
   const mx=(e.clientX-r.left)*sx, my=(e.clientY-r.top)*(canvas.height/r.height);
@@ -427,6 +534,7 @@ function onMove(e){
 
 function onClick(){
   if(G.throwing)return;
+  if(G.mode==='online'&&G.turn!==G.myPlayer)return;
   if(G.phase==='aim'){
     G.phase='power';G.power=5;G.powerDir=1;
     updatePhase();
@@ -435,15 +543,18 @@ function onClick(){
   } else if(G.phase==='power'){
     G.phase='flying';updatePhase();
     addLog(`💥 Lực ${Math.round(G.power)}% — phóng!`);
-    fire();
+    if(G.mode==='online'){
+      emitAction('fire',{angle:G.angle,power:G.power});
+      fire(true);
+    } else fire();
   }
 }
 
 // ── FIRE ──
-function fire(){
+function fire(skipEmit){
   G.throwing=true;
   const pid=G.turn,p=G.P[pid];
-  if(p.stunned){addLog(`😵 ${p.name} choáng, mất lượt!`);p.stunned=false;G.throwing=false;setTimeout(nextTurn,600);return;}
+  if(p.stunned){addLog(`😵 ${p.name} choáng, mất lượt!`);p.stunned=false;G.throwing=false;if(G.mode==='online'&&!skipEmit)emitAction('turnEnd');if(G.mode!=='online')setTimeout(nextTurn,600);return;}
   const dir=pid===1?1:-1;
   const fx=pid===1?P1X+16:P2X-16,fy=GY-36;
   const ang=G.angle*Math.PI/180;
@@ -463,7 +574,8 @@ function fire(){
       G.throwing=false;
       addLog(`💨 ${p.name} ném trượt!`);
       G.efx.push({txt:'MISS!',x:Math.max(60,Math.min(780,px)),y:Math.min(py,GY-12),life:50,col:'#94a3b8',sz:20});
-      setTimeout(nextTurn,500);
+      if(G.mode==='online'&&!skipEmit)emitAction('turnEnd');
+      if(G.mode!=='online')setTimeout(nextTurn,500);
     } else requestAnimationFrame(step);
   }
   requestAnimationFrame(step);
@@ -485,7 +597,7 @@ function resolveHit(atk){
   else{addLog(`${ch.proj} ${A.name}→${D.name}: -${dmg}HP`);G.efx.push({txt:`-${dmg}`,x:hx,y:GY-76,life:55,col:'#f87171',sz:24});}
   updateHUD();
   if(D.hp<=0)setTimeout(()=>endGame(atk),800);
-  else setTimeout(nextTurn,800);
+  else if(G.mode!=='online')setTimeout(nextTurn,800);
 }
 
 function burst(x,y){
@@ -506,17 +618,22 @@ function useItem(t){
     const tx=dp===1?P1X:P2X;
     G.efx.push({txt:`💣 -${dmg}!`,x:tx,y:GY-72,life:70,col:'#f59e0b',sz:25});
     addLog(`💣 ${p.name} ném BOM! -${dmg}HP`);burst(tx,GY-38);updateHUD();
+    if(G.mode==='online')emitAction('bomb',{dmg});
     if(D.hp<=0){setTimeout(()=>endGame(pid),600);return;}
   } else if(t==='heal'){
     const h=25;p.hp=Math.min(p.maxHp,p.hp+h);
     G.efx.push({txt:`+${h}HP 💊`,x:px,y:GY-72,life:60,col:'#6bcb77',sz:20});
     addLog(`💊 ${p.name} hồi ${h}HP`);updateHUD();
+    if(G.mode==='online')emitAction('heal',{heal:h});
   } else {
     p.shield=true;
     G.efx.push({txt:'🛡️ SHIELD',x:px,y:GY-72,life:60,col:'#60a5fa',sz:20});
     addLog(`🛡️ ${p.name} kích hoạt khiên`);
+    if(G.mode==='online')emitAction('shield');
   }
-  updateItemUI();setTimeout(nextTurn,600);
+  updateItemUI();
+  if(G.mode==='online')emitAction('turnEnd');
+  if(G.mode!=='online')setTimeout(nextTurn,600);
 }
 
 // ── TURN ──
@@ -527,10 +644,12 @@ function nextTurn(){
     addLog(`🔥 ${D.name} bỏng -5HP`);updateHUD();
     if(D.hp<=0){endGame(G.turn);return;}
   }
-  G.turn=G.turn===1?2:1;G.phase='aim';G.angle=45;G.throwing=false;
-  updatePhase();updateTurnUI();updateItemUI();
-  document.getElementById('aimtxt').textContent='🎯 Di chuột chọn góc, click chốt';
-  addLog(`━━ Lượt ${G.P[G.turn].char.emoji} ${G.P[G.turn].name} ━━`);
+  if(G.mode!=='online'){
+    G.turn=G.turn===1?2:1;G.phase='aim';G.angle=45;G.throwing=false;
+    updatePhase();updateTurnUI();updateItemUI();
+    document.getElementById('aimtxt').textContent='🎯 Di chuột chọn góc, click chốt';
+    addLog(`━━ Lượt ${G.P[G.turn].char.emoji} ${G.P[G.turn].name} ━━`);
+  }
 }
 
 function updatePhase(){
@@ -557,6 +676,7 @@ function endGame(wp){
   document.getElementById('wt').textContent=w.name+' CHIẾN THẮNG!';
   document.getElementById('wsub').textContent=`Còn ${w.hp}HP`;
   showS('swin');confetti();
+  if(G.mode==='online')emitAction('playAgain');
 }
 function confetti(){
   const es=['🎉','⭐','✨','🏆','💥','🎊'];
@@ -568,7 +688,10 @@ function confetti(){
   },i*100);
 }
 
-function playAgain(){G.throwing=false;G.parts=[];G.efx=[];startGame();}
+function playAgain(){
+  if(G.mode==='online')emitAction('playAgain');
+  G.throwing=false;G.parts=[];G.efx=[];startGame();
+}
 function goLobby(){cancelAnimationFrame(RAF);G.selChar={1:null,2:null};buildGrid();showS('sl');}
 function showS(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');if(id==='sg'){updateTurnUI();updatePhase();}}
 function addLog(m){const l=document.getElementById('blog');const d=document.createElement('div');d.className='le';d.textContent=m;l.appendChild(d);l.scrollTop=l.scrollHeight;while(l.children.length>20)l.removeChild(l.firstChild);}
