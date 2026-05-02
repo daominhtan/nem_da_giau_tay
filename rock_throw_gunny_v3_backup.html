@@ -11,6 +11,7 @@ h1{font-family:'Lilita One',cursive;text-align:center;font-size:1.7rem;backgroun
 .sub{text-align:center;font-size:.72rem;color:#a78bfa;margin-bottom:7px}
 .screen{display:none}.screen.active{display:block}
 
+/* LOBBY */
 #lobby{display:flex;flex-direction:column;align-items:center;gap:10px;padding:8px 0}
 .lbox{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:13px;padding:14px 20px;width:100%;max-width:420px;text-align:center}
 .lbox h2{font-family:'Lilita One',cursive;color:#ffd93d;margin-bottom:9px;font-size:.95rem}
@@ -29,6 +30,7 @@ input[type=text]::placeholder{color:rgba(255,255,255,.4)}
 .btn.o{background:linear-gradient(135deg,#d97706,#fbbf24)}
 .ri{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:7px}
 
+/* HUD */
 .hud{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;gap:5px}
 .phud{flex:1;background:rgba(255,255,255,.06);border-radius:9px;padding:5px 9px}
 .phud.p1{border-left:3px solid #60a5fa}.phud.p2{border-right:3px solid #f87171;text-align:right}
@@ -43,6 +45,7 @@ input[type=text]::placeholder{color:rgba(255,255,255,.4)}
 .tp1{background:rgba(96,165,250,.2);color:#60a5fa;border:1px solid #3b82f6}
 .tp2{background:rgba(248,113,113,.2);color:#f87171;border:1px solid #ef4444}
 
+/* Phase bar */
 #pbar{display:flex;align-items:center;justify-content:center;gap:8px;background:rgba(0,0,0,.35);border-radius:9px;padding:5px 12px;margin-bottom:6px;font-size:.78rem}
 .ps{padding:3px 10px;border-radius:14px;font-family:'Lilita One',cursive;font-size:.72rem;opacity:.3;transition:all .3s}
 .ps.active{opacity:1;transform:scale(1.1)}
@@ -53,6 +56,7 @@ input[type=text]::placeholder{color:rgba(255,255,255,.4)}
 #bf{background:linear-gradient(180deg,#0f0a1e,#2d1b69);border-radius:13px;padding:7px;margin-bottom:7px}
 #gc{width:100%;display:block;border-radius:9px;cursor:crosshair}
 
+/* bottom bar */
 #bot{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.05);border-radius:9px;padding:6px 11px;margin-bottom:6px;gap:8px;flex-wrap:wrap}
 #aimtxt{font-size:.75rem;color:#94a3b8;flex:1}
 .items-row{display:flex;gap:5px}
@@ -64,11 +68,13 @@ input[type=text]::placeholder{color:rgba(255,255,255,.4)}
 #blog{height:48px;overflow-y:auto;background:rgba(0,0,0,.3);border-radius:8px;padding:4px 9px;font-size:.7rem;color:#94a3b8;line-height:1.6}
 .le{animation:fi .3s}@keyframes fi{from{opacity:0;transform:translateX(-3px)}to{opacity:1}}
 
+/* Win */
 #wins{text-align:center;padding:24px 16px}
 .we{font-size:4rem;animation:bounce .6s infinite alternate}
 @keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-12px)}}
 .wt{font-family:'Lilita One',cursive;font-size:1.7rem;background:linear-gradient(135deg,#ffd93d,#ff6b6b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin:9px 0 4px}
 
+/* Waiting */
 #wscr{text-align:center;padding:28px 16px}
 .rc{font-family:'Lilita One',cursive;font-size:2rem;color:#ffd93d;letter-spacing:6px;background:rgba(255,211,61,.1);border:2px dashed #ffd93d;border-radius:11px;padding:10px 22px;margin:10px auto;display:inline-block}
 .pulse{animation:pulse 1.5s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
@@ -165,25 +171,27 @@ input[type=text]::placeholder{color:rgba(255,255,255,.4)}
 <script src="/socket.io/socket.io.js"></script>
 <script>
 const CHARS=[
-  {id:'monkey',name:'Khỉ Troll',emoji:'🐒',hp:100,proj:'🍌',stats:{lo:15,hi:25,crit:.15,cm:2}},
-  {id:'panda',name:'Gấu Mập',emoji:'🐼',hp:130,proj:'🪨',stats:{lo:12,hi:20,crit:.1,cm:1.8}},
-  {id:'dragon',name:'Rồng Lửa',emoji:'🐲',hp:90,proj:'🔥',stats:{lo:18,hi:30,crit:.2,cm:2.5}},
-  {id:'alien',name:'Người ET',emoji:'👽',hp:95,proj:'⚡',stats:{lo:20,hi:28,crit:.25,cm:2}},
-  {id:'ghost',name:'Ma Quỷ',emoji:'👻',hp:85,proj:'💀',stats:{lo:22,hi:32,crit:.3,cm:2.2}},
-  {id:'cat',name:'Mèo Troll',emoji:'😺',hp:100,proj:'🐟',stats:{lo:14,hi:26,crit:.35,cm:2.8}}
+  {id:'monkey',name:'Khỉ Troll',emoji:'🐒',hp:100,proj:'🍌',skill:'Crit +15%',stats:{lo:15,hi:25,crit:.15,cm:2}},
+  {id:'panda', name:'Gấu Mập', emoji:'🐼',hp:130,proj:'🪨',skill:'HP cao',  stats:{lo:12,hi:20,crit:.1,cm:1.8}},
+  {id:'dragon',name:'Rồng Lửa',emoji:'🐲',hp:90, proj:'🔥',skill:'Gây burn',stats:{lo:18,hi:30,crit:.2,cm:2.5}},
+  {id:'alien', name:'Người ET',emoji:'👽',hp:95, proj:'⚡',skill:'Choáng',  stats:{lo:20,hi:28,crit:.25,cm:2}},
+  {id:'ghost', name:'Ma Quỷ', emoji:'👻',hp:85, proj:'💀',skill:'Crit cao', stats:{lo:22,hi:32,crit:.3,cm:2.2}},
+  {id:'cat',   name:'Mèo Troll',emoji:'😺',hp:100,proj:'🐟',skill:'Crit mạnh',stats:{lo:14,hi:26,crit:.35,cm:2.8}}
 ];
 
 let G={
   mode:'local',roomCode:null,myPlayer:1,turn:1,
-  phase:'aim', angle:45, power:5, powerDir:1,
+  phase:'aim', // aim | power | flying
+  angle:45, power:5, powerDir:1,
   selChar:{1:null,2:null},
   P:{
     1:{char:null,hp:100,maxHp:100,name:'P1',items:{bomb:2,heal:1,shield:1},shield:false,burn:0,stunned:false},
     2:{char:null,hp:100,maxHp:100,name:'P2',items:{bomb:2,heal:1,shield:1},shield:false,burn:0,stunned:false}
   },
-  parts:[],efx:[],throwing:false,raf:null
+  parts:[],efx:[],throwing:false,pollInt:null,raf:null
 };
 
+// ── SOCKET.IO ──
 let socket=null;
 function initSocket(){
   if(socket)return;
@@ -206,8 +214,8 @@ function initSocket(){
     G.turn=data.turn;
     startGameOnline(data);
   });
+  // Server gửi kết quả đồng bộ cho cả 2 người
   socket.on('gameResult',(data)=>{
-    console.log('[gameResult]', data);
     applyGameResult(data);
   });
   socket.on('opponentDisconnected',()=>{
@@ -215,7 +223,89 @@ function initSocket(){
     showS('sl');
   });
   socket.on('playAgain',()=>{
+    G.throwing=false;G.parts=[];G.efx=[];
     if(G.roomCode&&socket)socket.emit('startGame');
+  });
+  socket.on('error',(e)=>msg(e));
+}
+
+function startGameOnline(data){
+  const c1=G.selChar[1],c2=G.selChar[2];
+  G.P[1]={char:c1,hp:data.p1Hp,maxHp:c1.hp,name:c1.name+' P1',items:data.p1Items||{bomb:2,heal:1,shield:1},shield:false,burn:0,stunned:false};
+  G.P[2]={char:c2,hp:data.p2Hp,maxHp:c2.hp,name:c2.name+' P2',items:data.p2Items||{bomb:2,heal:1,shield:1},shield:false,burn:0,stunned:false};
+  G.phase='aim';G.angle=45;G.power=5;G.powerDir=1;G.parts=[];G.efx=[];G.throwing=false;
+  document.getElementById('pn1').textContent=c1.emoji+' '+G.P[1].name;
+  document.getElementById('pn2').textContent=c2.emoji+' '+G.P[2].name;
+  showS('sg');updateHUD();updatePhase();updateTurnUI();
+  initCanvas();
+  addLog('⚔️ Bắt đầu! '+c1.name+' vs '+c2.name);
+}
+
+function applyGameResult(data){
+  const {attacker,dmg,crit,blocked,burnApplied,stunApplied,type,heal,turn,p1Hp,p2Hp,p1Shield,p2Shield,p1Items,p2Items,angle,power}=data;
+  const def=attacker===1?2:1;
+  const A=G.P[attacker],D=G.P[def];
+
+  // Cập nhật HP từ server (authoritative)
+  G.P[1].hp=p1Hp; G.P[2].hp=p2Hp;
+  // Cập nhật shield state
+  G.P[1].shield=p1Shield; G.P[2].shield=p2Shield;
+  // Cập nhật items
+  if(p1Items)G.P[1].items=p1Items;
+  if(p2Items)G.P[2].items=p2Items;
+
+  if(type==='bomb'||type==='heal'||type==='shield'){
+    // Hiển thị hiệu ứng cho bomb/heal/shield
+    if(type==='bomb'){
+      const tx=def===1?P1X:P2X;
+      G.efx.push({txt:`💣 -${dmg}!`,x:tx,y:GY-72,life:70,col:'#f59e0b',sz:25});
+      addLog(`💣 ${A.name} ném BOM! -${dmg}HP`);burst(tx,GY-38);
+      if(D.hp<=0){setTimeout(()=>endGame(attacker),600);}
+    } else if(type==='heal'){
+      const px=attacker===1?P1X:P2X;
+      G.efx.push({txt:`+${heal}HP 💊`,x:px,y:GY-72,life:60,col:'#6bcb77',sz:20});
+      addLog(`💊 ${A.name} hồi ${heal}HP`);
+    } else if(type==='shield'){
+      const px=attacker===1?P1X:P2X;
+      G.efx.push({txt:'🛡️ SHIELD',x:px,y:GY-72,life:60,col:'#60a5fa',sz:20});
+      addLog(`🛡️ ${A.name} kích hoạt khiên`);
+    }
+  } else {
+    // Fire result
+    if(crit&&!blocked){
+      addLog(`💥 CRITICAL! ${A.name}→${D.name}: -${dmg}HP!`);
+      G.efx.push({txt:`CRIT! -${dmg}`,x:(def===1?P1X:P2X),y:GY-78,life:70,col:'#ffd93d',sz:26});
+    } else if(blocked){
+      addLog(`🛡️ ${D.name} chặn! -${dmg}HP`);
+      G.efx.push({txt:`BLOCK -${dmg}`,x:(def===1?P1X:P2X),y:GY-78,life:62,col:'#60a5fa',sz:22});
+    } else {
+      addLog(`${A.char.proj} ${A.name}→${D.name}: -${dmg}HP`);
+      G.efx.push({txt:`-${dmg}`,x:(def===1?P1X:P2X),y:GY-76,life:55,col:'#f87171',sz:24});
+    }
+    if(burnApplied)addLog(`🔥 ${D.name} bị bỏng!`);
+    if(stunApplied){D.stunned=true;addLog(`⚡ ${D.name} bị choáng!`);}
+    if(D.hp<=0){setTimeout(()=>endGame(attacker),800);}
+  }
+
+  updateHUD();
+  G.turn=turn;
+  G.phase='aim';G.angle=45;G.power=5;G.throwing=false;
+  updatePhase();updateTurnUI();updateItemUI();
+  document.getElementById('aimtxt').textContent='🎯 Di chuột chọn góc, click chốt';
+  addLog(`━━ Lượt ${G.P[G.turn].char.emoji} ${G.P[G.turn].name} ━━`);
+}
+      updateHUD();
+      if(D.hp<=0){setTimeout(()=>endGame(attacker),800);return;}
+    }
+    G.turn=turn;
+    G.phase='aim';G.angle=45;G.throwing=false;
+    updatePhase();updateTurnUI();updateItemUI();
+    document.getElementById('aimtxt').textContent='🎯 Di chuột chọn góc, click chốt';
+    addLog(`━━ Lượt ${G.P[G.turn].char.emoji} ${G.P[G.turn].name} ━━`);
+  });
+  socket.on('opponentDisconnected',()=>{
+    msg('Đối thủ đã ngắt kết nối!');
+    showS('sl');
   });
   socket.on('error',(e)=>msg(e));
 }
@@ -233,200 +323,100 @@ function joinRoom(){
   socket.emit('joinRoom',{code,charId:G.selChar[1].id});
 }
 function cancelWait(){
-  G.roomCode=null;
+  if(G.roomCode&&socket){socket.emit('leave',G.roomCode);G.roomCode=null;}
   showS('sl');
 }
 
-function startGameOnline(data){
+// ── NETWORK GAME ACTIONS ──
+function emitAction(type,data={}){
+  if(G.mode==='online'&&socket){
+    socket.emit('gameAction',{type,player:G.myPlayer,...data});
+  }
+}
+function handleRemoteAction(data){
+  if(data.player===G.myPlayer)return;
+  if(data.type==='fire'){
+    // Server gửi kèm damage, crit, attacker
+    const {player,angle,power,damage,crit}=data;
+    G.throwing=true;G.phase='flying';updatePhase();
+    addLog(`💥 Lực ${Math.round(power)}% — phóng!`);
+    remoteFire(player,angle,power,damage,crit);
+  } else if(data.type==='bomb'){
+    const p=G.P[data.player];
+    const dp=data.player===1?2:1,D=G.P[dp];
+    D.hp=Math.max(0,D.hp-data.dmg);
+    const tx=dp===1?P1X:P2X;
+    G.efx.push({txt:`💣 -${data.dmg}!`,x:tx,y:GY-72,life:70,col:'#f59e0b',sz:25});
+    addLog(`💣 ${p.name} ném BOM! -${data.dmg}HP`);burst(tx,GY-38);updateHUD();
+    if(D.hp<=0)setTimeout(()=>endGame(data.player),600);
+  } else if(data.type==='heal'){
+    const p=G.P[data.player];
+    p.hp=Math.min(p.maxHp,p.hp+data.heal);
+    const px=data.player===1?P1X:P2X;
+    G.efx.push({txt:`+${data.heal}HP 💊`,x:px,y:GY-72,life:60,col:'#6bcb77',sz:20});
+    addLog(`💊 ${p.name} hồi ${data.heal}HP`);updateHUD();
+  } else if(data.type==='shield'){
+    G.P[data.player].shield=true;
+    const px=data.player===1?P1X:P2X;
+    G.efx.push({txt:'🛡️ SHIELD',x:px,y:GY-72,life:60,col:'#60a5fa',sz:20});
+    addLog(`🛡️ ${G.P[data.player].name} kích hoạt khiên`);
+  }
+}
+
+function remoteFire(pid,angle,power,damage,crit){
+  const p=G.P[pid];
+  if(p.stunned){addLog(`😵 ${p.name} choáng, mất lượt!`);p.stunned=false;G.throwing=false;return;}
+  const dir=pid===1?1:-1;
+  const fx=pid===1?P1X+16:P2X-16,fy=GY-36;
+  const ang=angle*Math.PI/180;
+  let px=fx,py=fy;
+  let vx=Math.cos(ang)*dir*power*.28,vy=-Math.sin(ang)*power*.28;
+  const proj=p.char.proj,tx=pid===1?P2X:P1X;
+  let steps=0;
+  function step(){
+    px+=vx;py+=vy;vy+=.5;steps++;
+    G.parts.push({x:px,y:py,vx:0,vy:0,e:proj,a:.9,sz:26});
+    const hit=Math.abs(px-tx)<55&&py>GY-92&&py<GY+8;
+    const miss=py>GY+8||steps>130||px<-60||px>canvas.width+60;
+      if(hit){
+        burst(tx,GY-38);G.throwing=false;
+        // Damage đã được xử lý ở turnUpdate, chỉ hiển thị hiệu ứng
+      } else if(miss){
+      G.throwing=false;
+      addLog(`💨 ${p.name} ném trượt!`);
+      G.efx.push({txt:'MISS!',x:Math.max(60,Math.min(780,px)),y:Math.min(py,GY-12),life:50,col:'#94a3b8',sz:20});
+    } else requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+function startLocal(){if(!G.selChar[1]){G.selChar[1]=CHARS[0];G.selChar[2]=CHARS[1];}G.mode='local';G.myPlayer=1;startGame();}
+
+// stars bg
+(()=>{const c=document.getElementById('stars');for(let i=0;i<55;i++){const s=document.createElement('div');s.className='star';const z=Math.random()*2.5+.5;s.style.cssText=`width:${z}px;height:${z}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${Math.random()*3+1}s;animation-delay:${Math.random()*3}s`;c.appendChild(s);}})();
+
+function buildGrid(){
+  const g=document.getElementById('csg');g.innerHTML='';
+  CHARS.forEach(ch=>{
+    const d=document.createElement('div');
+    d.className='ccard'+(G.selChar[1]?.id===ch.id?' sel':'');
+    d.innerHTML=`<span class="ce">${ch.emoji}</span><div class="cn">${ch.name}</div><div style="font-size:.6rem;color:#94a3b8">HP:${ch.hp}</div>`;
+    d.onclick=()=>{G.selChar[1]=ch;if(G.mode==='local')G.selChar[2]=CHARS[(CHARS.indexOf(ch)+1)%CHARS.length];buildGrid();};
+    g.appendChild(d);
+  });
+}
+
+// ── GAME ──
+function startGame(){
   const c1=G.selChar[1],c2=G.selChar[2];
-  G.P[1]={char:c1,hp:data.p1Hp,maxHp:c1.hp,name:c1.name+' P1',items:data.p1Items||{bomb:2,heal:1,shield:1},shield:false,burn:0,stunned:false};
-  G.P[2]={char:c2,hp:data.p2Hp,maxHp:c2.hp,name:c2.name+' P2',items:data.p2Items||{bomb:2,heal:1,shield:1},shield:false,burn:0,stunned:false};
+  G.P[1]={char:c1,hp:c1.hp,maxHp:c1.hp,name:c1.name+' P1',items:{bomb:2,heal:1,shield:1},shield:false,burn:0,stunned:false};
+  G.P[2]={char:c2,hp:c2.hp,maxHp:c2.hp,name:c2.name+' P2',items:{bomb:2,heal:1,shield:1},shield:false,burn:0,stunned:false};
   G.phase='aim';G.angle=45;G.power=5;G.powerDir=1;G.parts=[];G.efx=[];G.throwing=false;
   document.getElementById('pn1').textContent=c1.emoji+' '+G.P[1].name;
   document.getElementById('pn2').textContent=c2.emoji+' '+G.P[2].name;
   showS('sg');updateHUD();updatePhase();updateTurnUI();
   initCanvas();
   addLog('⚔️ Bắt đầu! '+c1.name+' vs '+c2.name);
-}
-
-function applyGameResult(data){
-  const {attacker,dmg,crit,blocked,burnApplied,stunApplied,type,heal,turn,p1Hp,p2Hp,p1Shield,p2Shield,p1Items,p2Items}=data;
-
-  // Cập nhật HP và trạng thái từ server
-  G.P[1].hp=p1Hp; G.P[2].hp=p2Hp;
-  G.P[1].shield=p1Shield; G.P[2].shield=p2Shield;
-  if(p1Items)G.P[1].items=p1Items;
-  if(p2Items)G.P[2].items=p2Items;
-
-  if(type==='miss'){
-    // Bắn trượt - chỉ đổi lượt, không có damage
-    addLog(`💨 ${G.P[attacker]?.name||'P'+attacker} ném trượt!`);
-  }
-  else if(type==='bomb'){
-    const def=attacker===1?2:1;
-    const A=G.P[attacker],D=G.P[def];
-    const tx=def===1?P1X:P2X;
-    G.efx.push({txt:`💣 -${dmg}!`,x:tx,y:GY-72,life:70,col:'#f59e0b',sz:25});
-    addLog(`💣 ${A.name} ném BOM! -${dmg}HP`);burst(tx,GY-38);
-    if(D.hp<=0){setTimeout(()=>endGame(attacker),600);updateHUD();return;}
-  }
-  else if(type==='heal'){
-    const A=G.P[attacker];
-    const px=attacker===1?P1X:P2X;
-    G.efx.push({txt:`+${heal}HP 💊`,x:px,y:GY-72,life:60,col:'#6bcb77',sz:20});
-    addLog(`💊 ${A.name} hồi ${heal}HP`);
-  }
-  else if(type==='shield'){
-    const A=G.P[attacker];
-    const px=attacker===1?P1X:P2X;
-    G.efx.push({txt:'🛡️ SHIELD',x:px,y:GY-72,life:60,col:'#60a5fa',sz:20});
-    addLog(`🛡️ ${A.name} kích hoạt khiên`);
-  }
-  else if(type==='fire'){
-    // Bắn trúng
-    const def=attacker===1?2:1;
-    const A=G.P[attacker],D=G.P[def];
-    if(crit&&!blocked){
-      addLog(`💥 CRITICAL! ${A.name}→${D.name}: -${dmg}HP!`);
-      G.efx.push({txt:`CRIT! -${dmg}`,x:(def===1?P1X:P2X),y:GY-78,life:70,col:'#ffd93d',sz:26});
-    } else if(blocked){
-      addLog(`🛡️ ${D.name} chặn! -${dmg}HP`);
-      G.efx.push({txt:`BLOCK -${dmg}`,x:(def===1?P1X:P2X),y:GY-78,life:62,col:'#60a5fa',sz:22});
-    } else {
-      addLog(`${A.char.proj} ${A.name}→${D.name}: -${dmg}HP`);
-      G.efx.push({txt:`-${dmg}`,x:(def===1?P1X:P2X),y:GY-76,life:55,col:'#f87171',sz:24});
-    }
-    if(burnApplied)addLog(`🔥 ${D.name} bị bỏng!`);
-    if(stunApplied){D.stunned=true;addLog(`⚡ ${D.name} bị choáng!`);}
-    if(D.hp<=0){setTimeout(()=>endGame(attacker),800);updateHUD();return;}
-  }
-
-  // Cập nhật UI cho mọi trường hợp
-  updateHUD();
-  G.turn=turn;
-  G.phase='aim';G.angle=45;G.power=5;G.throwing=false;
-  updatePhase();updateTurnUI();updateItemUI();
-  document.getElementById('aimtxt').textContent='🎯 Di chuột chọn góc, click chốt';
-  addLog(`━━ Lượt ${G.P[G.turn].char.emoji} ${G.P[G.turn].name} ━━`);
-}
-
-function emitAction(type,data={}){
-  if(G.mode==='online'&&socket){
-    console.log('[Emit]',type, data);
-    socket.emit('gameAction',{type,player:G.myPlayer,...data});
-  }
-}
-
-// ── FIRE ──
-function fire(){
-  G.throwing=true;
-  const pid=G.turn,p=G.P[pid];
-  if(p.stunned){addLog(`😵 ${p.name} choáng, mất lượt!`);p.stunned=false;G.throwing=false;if(G.mode!=='online')setTimeout(nextTurn,600);return;}
-  const dir=pid===1?1:-1;
-  const fx=pid===1?P1X+16:P2X-16,fy=GY-36;
-  const ang=G.angle*Math.PI/180;
-  let px=fx,py=fy;
-  let vx=Math.cos(ang)*dir*G.power*.28,vy=-Math.sin(ang)*G.power*.28;
-  const proj=p.char.proj,tx=pid===1?P2X:P1X;
-  let steps=0;
-
-  function step(){
-    px+=vx;py+=vy;vy+=.5;steps++;
-    G.parts.push({x:px,y:py,vx:0,vy:0,e:proj,a:.9,sz:26});
-    const hit=Math.abs(px-tx)<55&&py>GY-92&&py<GY+8;
-    const miss=py>GY+8||steps>130||px<-60||px>canvas.width+60;
-    if(hit){
-      G.throwing=false;burst(tx,GY-38);
-      if(G.mode==='online'){
-        emitAction('fire',{angle:G.angle,power:G.power});
-      } else {
-        resolveHit(pid);
-        setTimeout(nextTurn,800);
-      }
-    } else if(miss){
-      G.throwing=false;
-      addLog(`💨 ${p.name} ném trượt!`);
-      G.efx.push({txt:'MISS!',x:Math.max(60,Math.min(780,px)),y:Math.min(py,GY-12),life:50,col:'#94a3b8',sz:20});
-      if(G.mode==='online'){
-        emitAction('turnEnd');
-      } else {
-        setTimeout(nextTurn,500);
-      }
-    } else requestAnimationFrame(step);
-  }
-  requestAnimationFrame(step);
-}
-
-function resolveHit(atk){
-  const def=atk===1?2:1,A=G.P[atk],D=G.P[def],ch=A.char;
-  let dmg=ch.stats.lo+~~(Math.random()*(ch.stats.hi-ch.stats.lo));
-  const crit=Math.random()<ch.stats.crit,blocked=D.shield;
-  if(crit)dmg=~~(dmg*ch.stats.cm);
-  if(blocked){dmg=~~(dmg*.3);D.shield=false;}
-  D.hp=Math.max(0,D.hp-dmg);
-  if(ch.id==='dragon'&&Math.random()<.4)D.burn=3;
-  if(ch.id==='alien'&&Math.random()<.3){D.stunned=true;addLog('⚡ '+D.name+' bị choáng!');}
-  const hx=def===1?P1X:P2X;
-  if(crit){addLog(`💥 CRITICAL! ${A.name}→${D.name}: -${dmg}HP!`);G.efx.push({txt:`CRIT! -${dmg}`,x:hx,y:GY-78,life:70,col:'#ffd93d',sz:26});}
-  else if(blocked){addLog(`🛡️ ${D.name} chặn! -${dmg}HP`);G.efx.push({txt:`BLOCK -${dmg}`,x:hx,y:GY-78,life:62,col:'#60a5fa',sz:22});}
-  else{addLog(`${ch.proj} ${A.name}→${D.name}: -${dmg}HP`);G.efx.push({txt:`-${dmg}`,x:hx,y:GY-76,life:55,col:'#f87171',sz:24});}
-  updateHUD();
-  if(D.hp<=0)setTimeout(()=>endGame(atk),800);
-  else setTimeout(nextTurn,800);
-}
-
-function burst(x,y){
-  const es=['✨','💫','⭐','💥','🌟'];
-  for(let i=0;i<10;i++){const a=Math.random()*Math.PI*2,s=Math.random()*5+2;G.parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-2,e:es[~~(Math.random()*es.length)],a:1,sz:14+Math.random()*10});}
-}
-
-// ── ITEMS ──
-function useItem(t){
-  const pid=G.turn,p=G.P[pid];
-  if(p.items[t]<=0){msg('Hết vật phẩm!');return;}
-  if(G.throwing||G.phase!=='aim')return;
-  p.items[t]--;
-  const px=pid===1?P1X:P2X;
-  if(t==='bomb'){
-    if(G.mode==='online'){
-      emitAction('bomb');
-    } else {
-      const dp=pid===1?2:1,D=G.P[dp];
-      const dmg=30+~~(Math.random()*15);D.hp=Math.max(0,D.hp-dmg);
-      const tx=dp===1?P1X:P2X;
-      G.efx.push({txt:`💣 -${dmg}!`,x:tx,y:GY-72,life:70,col:'#f59e0b',sz:25});
-      addLog(`💣 ${p.name} ném BOM! -${dmg}HP`);burst(tx,GY-38);updateHUD();
-      if(D.hp<=0){setTimeout(()=>endGame(pid),600);return;}
-      setTimeout(nextTurn,600);
-    }
-  } else if(t==='heal'){
-    const h=25;p.hp=Math.min(p.maxHp,p.hp+h);
-    G.efx.push({txt:`+${h}HP 💊`,x:px,y:GY-72,life:60,col:'#6bcb77',sz:20});
-    addLog(`💊 ${p.name} hồi ${h}HP`);updateHUD();
-    if(G.mode==='online')emitAction('heal');
-    else setTimeout(nextTurn,600);
-  } else {
-    p.shield=true;
-    G.efx.push({txt:'🛡️ SHIELD',x:px,y:GY-72,life:60,col:'#60a5fa',sz:20});
-    addLog(`🛡️ ${p.name} kích hoạt khiên`);
-    if(G.mode==='online')emitAction('shield');
-    else setTimeout(nextTurn,600);
-  }
-  updateItemUI();
-}
-
-// ── TURN ──
-function nextTurn(){
-  const dp=G.turn===1?2:1,D=G.P[dp];
-  if(D.burn>0){D.burn--;D.hp=Math.max(0,D.hp-5);
-    G.efx.push({txt:'🔥 -5',x:dp===1?P1X:P2X,y:GY-60,life:48,col:'#f59e0b',sz:18});
-    addLog(`🔥 ${D.name} bỏng -5HP`);updateHUD();
-    if(D.hp<=0){endGame(G.turn);return;}
-  }
-  G.turn=G.turn===1?2:1;G.phase='aim';G.angle=45;G.throwing=false;
-  updatePhase();updateTurnUI();updateItemUI();
-  document.getElementById('aimtxt').textContent='🎯 Di chuột chọn góc, click chốt';
-  addLog(`━━ Lượt ${G.P[G.turn].char.emoji} ${G.P[G.turn].name} ━━`);
 }
 
 // ── CANVAS ──
@@ -455,30 +445,51 @@ function tickPower(){
   if(G.power<=5){G.power=5;G.powerDir=1;}
 }
 
+// ── RENDER ──
 function render(){
   ctx=canvas.getContext('2d');
   ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // sky
   const sk=ctx.createLinearGradient(0,0,0,canvas.height);
   sk.addColorStop(0,'#0b0720');sk.addColorStop(1,'#2d1b69');
   ctx.fillStyle=sk;ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  // moon
   ctx.save();ctx.fillStyle='#fef9c3';ctx.shadowColor='#fef9c3';ctx.shadowBlur=16;
   ctx.beginPath();ctx.arc(710,44,24,0,Math.PI*2);ctx.fill();ctx.restore();
+
+  // starfield
   ctx.fillStyle='rgba(255,255,255,.5)';
   [[42,26],[135,42],[280,16],[420,36],[570,20],[735,52],[70,72],[360,62],[490,32],[195,52],[650,35],[310,80]].forEach(([x,y])=>{ctx.beginPath();ctx.arc(x,y,1,0,Math.PI*2);ctx.fill();});
+
+  // mountains
   ctx.fillStyle='#1a0d3d';
   mtn(0,270,190,115);mtn(135,270,235,92);mtn(530,270,205,105);mtn(635,270,225,120);
+
+  // ground
   const gr=ctx.createLinearGradient(0,GY,0,canvas.height);
   gr.addColorStop(0,'#4c1d95');gr.addColorStop(1,'#2d1b69');
   ctx.fillStyle=gr;ctx.fillRect(0,GY,canvas.width,canvas.height-GY);
   ctx.strokeStyle='#7c3aed';ctx.lineWidth=2;ctx.shadowColor='#a78bfa';ctx.shadowBlur=7;
   ctx.beginPath();ctx.moveTo(0,GY);ctx.lineTo(canvas.width,GY);ctx.stroke();ctx.shadowBlur=0;
+
+  // aim line (single straight line, no arc preview)
   if(G.phase==='aim'||G.phase==='power') drawAimLine();
+
+  // characters
   drawChar(1);drawChar(2);
+
+  // power ring (power phase)
   if(G.phase==='power'&&!G.throwing) drawPowerRing();
+
+  // particles
   G.parts.forEach(p=>{
     ctx.save();ctx.globalAlpha=p.a;ctx.font=p.sz+'px serif';ctx.textAlign='center';
     ctx.fillText(p.e,p.x,p.y);ctx.restore();
   });
+
+  // floating text effects
   G.efx=G.efx.filter(e=>e.life>0);
   G.efx.forEach(e=>{
     e.life--;e.y-=.7;
@@ -516,6 +527,7 @@ function drawAimLine(){
   const pid=G.turn,dir=pid===1?1:-1;
   const fx=pid===1?P1X+16:P2X-16,fy=GY-36;
   const ang=G.angle*Math.PI/180;
+  // Single straight line, length 80px — no full trajectory
   const len=80;
   const ex=fx+Math.cos(ang)*dir*len;
   const ey=fy-Math.sin(ang)*len;
@@ -524,6 +536,7 @@ function drawAimLine(){
   ctx.lineWidth=2.5;ctx.lineCap='round';
   ctx.shadowColor=pid===1?'#60a5fa':'#f87171';ctx.shadowBlur=6;
   ctx.beginPath();ctx.moveTo(fx,fy);ctx.lineTo(ex,ey);ctx.stroke();
+  // arrowhead
   const headLen=10,headAng=.4;
   const lineAng=Math.atan2(ey-fy,ex-fx);
   ctx.beginPath();
@@ -532,6 +545,7 @@ function drawAimLine(){
   ctx.moveTo(ex,ey);
   ctx.lineTo(ex-Math.cos(lineAng+headAng)*headLen,ey-Math.sin(lineAng+headAng)*headLen);
   ctx.stroke();ctx.shadowBlur=0;
+  // angle label
   ctx.fillStyle=pid===1?'#93c5fd':'#fca5a5';
   ctx.font='bold 12px Nunito,sans-serif';ctx.textAlign='center';
   ctx.fillText(Math.round(G.angle)+'°',fx+(dir*65),fy-8);
@@ -544,19 +558,29 @@ function drawPowerRing(){
   const R=38, pct=G.power/100;
   const startAng=-Math.PI/2;
   const endAng=startAng+pct*Math.PI*2;
+
+  // BG ring
   ctx.save();
   ctx.strokeStyle='rgba(255,255,255,.12)';ctx.lineWidth=8;
   ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.stroke();
+
+  // Color based on power level
   let col;
   if(pct<.4) col='#6bcb77';
   else if(pct<.7) col='#fbbf24';
   else col='#ef4444';
+
+  // Power arc
   ctx.strokeStyle=col;ctx.lineWidth=8;ctx.lineCap='round';
   ctx.shadowColor=col;ctx.shadowBlur=14;
   ctx.beginPath();ctx.arc(cx,cy,R,startAng,endAng);ctx.stroke();
   ctx.shadowBlur=0;
+
+  // Center text: power %
   ctx.fillStyle='#fff';ctx.font='bold 13px Nunito,sans-serif';ctx.textAlign='center';
   ctx.fillText(Math.round(G.power)+'%',cx,cy+5);
+
+  // Outer pulse ring when near max
   if(G.power>80){
     ctx.strokeStyle=col;ctx.lineWidth=2;
     ctx.globalAlpha=(.5*(G.power-80)/20)*Math.abs(Math.sin(Date.now()/150));
@@ -565,6 +589,7 @@ function drawPowerRing(){
   ctx.restore();
 }
 
+// ── INPUT ──
 function onMove(e){
   if(G.phase!=='aim'||G.throwing)return;
   if(G.mode==='online'&&G.turn!==G.myPlayer)return;
@@ -589,11 +614,128 @@ function onClick(){
   } else if(G.phase==='power'){
     G.phase='flying';updatePhase();
     addLog(`💥 Lực ${Math.round(G.power)}% — phóng!`);
-    fire();
+    if(G.mode==='online'){
+      emitAction('fire',{angle:G.angle,power:G.power});
+      fire(true);
+    } else fire();
   }
 }
 
-// ── UI ──
+// ── FIRE ──
+function fire(skipEmit){
+  G.throwing=true;
+  const pid=G.turn,p=G.P[pid];
+  if(p.stunned){addLog(`😵 ${p.name} choáng, mất lượt!`);p.stunned=false;G.throwing=false;if(G.mode==='online'&&!skipEmit)emitAction('turnEnd');if(G.mode!=='online')setTimeout(nextTurn,600);return;}
+  const dir=pid===1?1:-1;
+  const fx=pid===1?P1X+16:P2X-16,fy=GY-36;
+  const ang=G.angle*Math.PI/180;
+  let px=fx,py=fy;
+  let vx=Math.cos(ang)*dir*G.power*.28,vy=-Math.sin(ang)*G.power*.28;
+  const proj=p.char.proj,tx=pid===1?P2X:P1X;
+  let steps=0;
+
+  function step(){
+    px+=vx;py+=vy;vy+=.5;steps++;
+    G.parts.push({x:px,y:py,vx:0,vy:0,e:proj,a:.9,sz:26});
+    const hit=Math.abs(px-tx)<55&&py>GY-92&&py<GY+8;
+    const miss=py>GY+8||steps>130||px<-60||px>canvas.width+60;
+    if(hit){
+      G.throwing=false;burst(tx,GY-38);
+      if(G.mode==='online'){
+        // Gửi lên server xử lý
+        emitAction('fire',{angle:G.angle,power:G.power});
+      } else {
+        resolveHit(pid);
+        setTimeout(nextTurn,800);
+      }
+    } else if(miss){
+      G.throwing=false;
+      addLog(`💨 ${p.name} ném trượt!`);
+      G.efx.push({txt:'MISS!',x:Math.max(60,Math.min(780,px)),y:Math.min(py,GY-12),life:50,col:'#94a3b8',sz:20});
+      if(G.mode==='online')emitAction('turnEnd');
+      if(G.mode!=='online')setTimeout(nextTurn,500);
+    } else requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+// ── COMBAT ──
+function resolveHit(atk){
+  const def=atk===1?2:1,A=G.P[atk],D=G.P[def],ch=A.char;
+  let dmg=ch.stats.lo+~~(Math.random()*(ch.stats.hi-ch.stats.lo));
+  const crit=Math.random()<ch.stats.crit,blocked=D.shield;
+  if(crit)dmg=~~(dmg*ch.stats.cm);
+  if(blocked){dmg=~~(dmg*.3);D.shield=false;}
+  D.hp=Math.max(0,D.hp-dmg);
+  if(ch.id==='dragon'&&Math.random()<.4)D.burn=3;
+  if(ch.id==='alien'&&Math.random()<.3){D.stunned=true;addLog('⚡ '+D.name+' bị choáng!');}
+  const hx=def===1?P1X:P2X;
+  if(crit){addLog(`💥 CRITICAL! ${A.name}→${D.name}: -${dmg}HP!`);G.efx.push({txt:`CRIT! -${dmg}`,x:hx,y:GY-78,life:70,col:'#ffd93d',sz:26});}
+  else if(blocked){addLog(`🛡️ ${D.name} chặn! -${dmg}HP`);G.efx.push({txt:`BLOCK -${dmg}`,x:hx,y:GY-78,life:62,col:'#60a5fa',sz:22});}
+  else{addLog(`${ch.proj} ${A.name}→${D.name}: -${dmg}HP`);G.efx.push({txt:`-${dmg}`,x:hx,y:GY-76,life:55,col:'#f87171',sz:24});}
+  updateHUD();
+  if(D.hp<=0)setTimeout(()=>endGame(atk),800);
+  else if(G.mode!=='online')setTimeout(nextTurn,800);
+}
+
+function burst(x,y){
+  const es=['✨','💫','⭐','💥','🌟'];
+  for(let i=0;i<10;i++){const a=Math.random()*Math.PI*2,s=Math.random()*5+2;G.parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-2,e:es[~~(Math.random()*es.length)],a:1,sz:14+Math.random()*10});}
+}
+
+// ── ITEMS ──
+function useItem(t){
+  const pid=G.turn,p=G.P[pid];
+  if(p.items[t]<=0){msg('Hết vật phẩm!');return;}
+  if(G.throwing||G.phase!=='aim')return;
+  p.items[t]--;
+  const px=pid===1?P1X:P2X;
+  if(t==='bomb'){
+    const dp=pid===1?2:1,D=G.P[dp];
+    // Chỉ gửi lên server, không tự tính damage
+    G.efx.push({txt:'💣',x:px,y:GY-72,life:30,col:'#f59e0b',sz:20});
+    addLog(`💣 ${p.name} dùng BOM!`);
+    if(G.mode==='online')emitAction('bomb');
+    else {
+      const dmg=30+~~(Math.random()*15);D.hp=Math.max(0,D.hp-dmg);
+      const tx=dp===1?P1X:P2X;
+      G.efx.push({txt:`-${dmg}!`,x:tx,y:GY-72,life:70,col:'#f59e0b',sz:25});
+      addLog(`💣 ${p.name} ném BOM! -${dmg}HP`);burst(tx,GY-38);updateHUD();
+      if(D.hp<=0){setTimeout(()=>endGame(pid),600);return;}
+      setTimeout(nextTurn,600);
+    }
+  } else if(t==='heal'){
+    const h=25;p.hp=Math.min(p.maxHp,p.hp+h);
+    G.efx.push({txt:`+${h}HP 💊`,x:px,y:GY-72,life:60,col:'#6bcb77',sz:20});
+    addLog(`💊 ${p.name} hồi ${h}HP`);updateHUD();
+    if(G.mode==='online')emitAction('heal');
+    else setTimeout(nextTurn,600);
+  } else {
+    p.shield=true;
+    G.efx.push({txt:'🛡️ SHIELD',x:px,y:GY-72,life:60,col:'#60a5fa',sz:20});
+    addLog(`🛡️ ${p.name} kích hoạt khiên`);
+    if(G.mode==='online')emitAction('shield');
+    else setTimeout(nextTurn,600);
+  }
+  updateItemUI();
+}
+
+// ── TURN ──
+function nextTurn(){
+  const dp=G.turn===1?2:1,D=G.P[dp];
+  if(D.burn>0){D.burn--;D.hp=Math.max(0,D.hp-5);
+    G.efx.push({txt:'🔥 -5',x:dp===1?P1X:P2X,y:GY-60,life:48,col:'#f59e0b',sz:18});
+    addLog(`🔥 ${D.name} bỏng -5HP`);updateHUD();
+    if(D.hp<=0){endGame(G.turn);return;}
+  }
+  if(G.mode!=='online'){
+    G.turn=G.turn===1?2:1;G.phase='aim';G.angle=45;G.throwing=false;
+    updatePhase();updateTurnUI();updateItemUI();
+    document.getElementById('aimtxt').textContent='🎯 Di chuột chọn góc, click chốt';
+    addLog(`━━ Lượt ${G.P[G.turn].char.emoji} ${G.P[G.turn].name} ━━`);
+  }
+}
+
 function updatePhase(){
   [['ph1','aim'],['ph2','power'],['ph3','flying']].forEach(([id,ph])=>document.getElementById(id).classList.toggle('active',G.phase===ph));
 }
@@ -611,28 +753,15 @@ function updateItemUI(){
   ['bomb','heal','shield'].forEach(k=>{document.getElementById('ic_'+k).textContent='×'+p.items[k];document.getElementById('ib_'+k).disabled=p.items[k]<=0||G.throwing||G.phase!=='aim';});
 }
 
-function startLocal(){if(!G.selChar[1]){G.selChar[1]=CHARS[0];G.selChar[2]=CHARS[1];}G.mode='local';G.myPlayer=1;startGame();}
-
-function startGame(){
-  const c1=G.selChar[1],c2=G.selChar[2];
-  G.P[1]={char:c1,hp:c1.hp,maxHp:c1.hp,name:c1.name+' P1',items:{bomb:2,heal:1,shield:1},shield:false,burn:0,stunned:false};
-  G.P[2]={char:c2,hp:c2.hp,maxHp:c2.hp,name:c2.name+' P2',items:{bomb:2,heal:1,shield:1},shield:false,burn:0,stunned:false};
-  G.phase='aim';G.angle=45;G.power=5;G.powerDir=1;G.parts=[];G.efx=[];G.throwing=false;
-  document.getElementById('pn1').textContent=c1.emoji+' '+G.P[1].name;
-  document.getElementById('pn2').textContent=c2.emoji+' '+G.P[2].name;
-  showS('sg');updateHUD();updatePhase();updateTurnUI();
-  initCanvas();
-  addLog('⚔️ Bắt đầu! '+c1.name+' vs '+c2.name);
-}
-
+// ── WIN ──
 function endGame(wp){
   cancelAnimationFrame(RAF);const w=G.P[wp];
   document.getElementById('we').textContent=w.char.emoji;
   document.getElementById('wt').textContent=w.name+' CHIẾN THẮNG!';
   document.getElementById('wsub').textContent=`Còn ${w.hp}HP`;
   showS('swin');confetti();
+  if(G.mode==='online')emitAction('playAgain');
 }
-
 function confetti(){
   const es=['🎉','⭐','✨','🏆','💥','🎊'];
   for(let i=0;i<16;i++)setTimeout(()=>{
@@ -644,27 +773,14 @@ function confetti(){
 }
 
 function playAgain(){
-  G.throwing=false;G.parts=[];G.efx=[];
   if(G.mode==='online')emitAction('playAgain');
-  else startGame();
+  G.throwing=false;G.parts=[];G.efx=[];startGame();
 }
 function goLobby(){cancelAnimationFrame(RAF);G.selChar={1:null,2:null};buildGrid();showS('sl');}
 function showS(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');if(id==='sg'){updateTurnUI();updatePhase();}}
 function addLog(m){const l=document.getElementById('blog');const d=document.createElement('div');d.className='le';d.textContent=m;l.appendChild(d);l.scrollTop=l.scrollHeight;while(l.children.length>20)l.removeChild(l.firstChild);}
 function msg(m){const el=document.createElement('div');el.style.cssText='position:fixed;top:14px;left:50%;transform:translateX(-50%);background:#7c3aed;color:#fff;padding:8px 16px;border-radius:9px;font-family:Nunito,sans-serif;font-weight:700;z-index:9999';el.textContent=m;document.body.appendChild(el);setTimeout(()=>el.remove(),2000);}
 
-// ── INIT ──
-(()=>{const c=document.getElementById('stars');for(let i=0;i<55;i++){const s=document.createElement('div');s.className='star';const z=Math.random()*2.5+.5;s.style.cssText=`width:${z}px;height:${z}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${Math.random()*3+1}s;animation-delay:${Math.random()*3}s`;c.appendChild(s);}})();
-function buildGrid(){
-  const g=document.getElementById('csg');g.innerHTML='';
-  CHARS.forEach(ch=>{
-    const d=document.createElement('div');
-    d.className='ccard'+(G.selChar[1]?.id===ch.id?' sel':'');
-    d.innerHTML=`<span class="ce">${ch.emoji}</span><div class="cn">${ch.name}</div><div style="font-size:.6rem;color:#94a3b8">HP:${ch.hp}</div>`;
-    d.onclick=()=>{G.selChar[1]=ch;if(G.mode==='local')G.selChar[2]=CHARS[(CHARS.indexOf(ch)+1)%CHARS.length];buildGrid();};
-    g.appendChild(d);
-  });
-}
 buildGrid();G.selChar[1]=CHARS[0];G.selChar[2]=CHARS[1];buildGrid();
 </script>
 </body>
