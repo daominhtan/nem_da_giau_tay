@@ -159,12 +159,21 @@ io.on('connection', (socket) => {
     if(code && rooms[code]){
       const room = rooms[code];
       room.turn=1;
+      room.gameStarted=false;
       room.p1Hp=getChar(room.p1Char).hp;
       room.p2Hp=getChar(room.p2Char).hp;
       room.p1Shield=false; room.p2Shield=false;
+      room.p1Burn=0; room.p2Burn=0; room.p1Stun=false; room.p2Stun=false;
       room.p1Items={bomb:2,heal:1,shield:1};
       room.p2Items={bomb:2,heal:1,shield:1};
-      socket.to(code).emit('playAgain');
+      // Gửi gameStart cho cả 2 người để khởi động lại
+      const c1 = getChar(room.p1Char), c2 = getChar(room.p2Char);
+      io.to(code).emit('gameStart', {
+        p1Char:room.p1Char, p2Char:room.p2Char, turn:room.turn,
+        p1Hp:room.p1Hp, p2Hp:room.p2Hp,
+        p1Items:room.p1Items, p2Items:room.p2Items
+      });
+      room.gameStarted = true;
     }
   });
 

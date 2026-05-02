@@ -215,7 +215,8 @@ function initSocket(){
     showS('sl');
   });
   socket.on('playAgain',()=>{
-    if(G.roomCode&&socket)socket.emit('startGame');
+    // Server sẽ gửi gameStart, reset local trước
+    G.throwing=false;G.parts=[];G.efx=[];
   });
   socket.on('error',(e)=>msg(e));
 }
@@ -645,8 +646,9 @@ function confetti(){
 
 function playAgain(){
   G.throwing=false;G.parts=[];G.efx=[];
-  if(G.mode==='online')emitAction('playAgain');
-  else startGame();
+  if(G.mode==='online'&&socket){
+    socket.emit('playAgain');
+  } else startGame();
 }
 function goLobby(){cancelAnimationFrame(RAF);G.selChar={1:null,2:null};buildGrid();showS('sl');}
 function showS(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');if(id==='sg'){updateTurnUI();updatePhase();}}
