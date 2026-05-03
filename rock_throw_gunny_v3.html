@@ -589,34 +589,47 @@ function drawAimLine(){
 function drawPowerRing(){
   const pid=G.turn, cx=pid===1?P1X:P2X;
   const fs=Math.max(36,Math.min(canvas.width*0.06,56));
-  // Arc 270° bao quanh avatar (avatar nằm giữa vòng)
-  const R=fs*1.2; // to hơn avatar đáng kể
+  const R=fs*1.2;
   const pct=G.power/100;
   ctx.save();
-  // Dịch lên để avatar nằm giữa vòng (GY - fs*0.5 là tâm emoji)
   ctx.translate(cx, GY - fs*0.5);
-  // Vẽ nền arc 270°
-  ctx.strokeStyle='rgba(255,255,255,.1)';
+  // 270° arc: P1(-135°→135°), P2(45°→315° = xoay 180°)
+  const baseAng = pid===1 ? -135 : 45;
+  const startAng = baseAng * Math.PI/180;
+  const fullAng = startAng + 270 * Math.PI/180;
+  // Vẽ nền arc 270° (dày hơn)
+  ctx.strokeStyle='rgba(255,255,255,.12)';
   ctx.lineWidth=6;
   ctx.beginPath();
-  ctx.arc(0,0,R,(-135)*Math.PI/180,(135)*Math.PI/180);
+  ctx.arc(0,0,R,startAng,fullAng);
   ctx.stroke();
-  // Vẽ arc năng lượng (270° * pct)
+  // Vẽ arc năng lượng (dày)
   let col;
   if(pct<.4) col='rgba(107,203,119,.7)';
   else if(pct<.7) col='rgba(251,191,36,.7)';
   else col='rgba(239,68,68,.7)';
   ctx.strokeStyle=col;
-  ctx.lineWidth=6;
+  ctx.lineWidth=8;
   ctx.lineCap='round';
-  const endAng=(-135 + 270*pct)*Math.PI/180;
+  const endAng=startAng + 270*pct*Math.PI/180;
   ctx.beginPath();
-  ctx.arc(0,0,R,(-135)*Math.PI/180,endAng);
+  ctx.arc(0,0,R,startAng,endAng);
   ctx.stroke();
+  // Vẽ chia vạch (nhỏ)
+  ctx.save();
+  for(let i=0;i<=10;i++){
+    const tickAng=(baseAng + i*27)*Math.PI/180;
+    const innerR=R-6, outerR=R+6;
+    ctx.strokeStyle=i<=pct*10?'rgba(255,255,255,.3)':'rgba(255,255,255,.1)';
+    ctx.lineWidth=i%5===0?1:0.5;
+    ctx.beginPath();
+    ctx.moveTo(Math.cos(tickAng)*innerR, Math.sin(tickAng)*innerR);
+    ctx.lineTo(Math.cos(tickAng)*outerR, Math.sin(tickAng)*outerR);
+    ctx.stroke();
+  }
+  ctx.restore();
   // Text năng lượng
-  ctx.fillStyle='#fff';
-  ctx.font='bold 13px Nunito,sans-serif';
-  ctx.textAlign='center';
+  ctx.fillStyle='#fff';ctx.font='bold 13px Nunito,sans-serif';ctx.textAlign='center';
   ctx.fillText(Math.round(G.power)+'%',0,R+20);
   ctx.restore();
 }
