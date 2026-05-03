@@ -3,26 +3,41 @@
 <head>
 <meta charset="UTF-8">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@400;700&display=swap');
+@font-face {
+  font-family: 'Cherry Bomb One';
+  src: url('fonts/Cherry_Bomb_One/CherryBombOne-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Playwrite FR Moderne';
+  src: url('fonts/Playwrite_FR_Moderne/PlaywriteFRModerne-VariableFont_wght.ttf') format('truetype');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;700&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Nunito',sans-serif;background:#1a0a2e;color:#fff;overflow:hidden;margin:0;padding:0;width:100vw;height:100vh}
+body{font-family:'Cherry Bomb One',cursive;background:#1a0a2e;color:#fff;overflow:hidden;margin:0;padding:0;width:100vw;height:100vh}
 #wrap{width:100vw;height:100vh;margin:0;padding:3px;position:relative;z-index:1;box-sizing:border-box;display:flex;flex-direction:column;overflow:hidden}
-h1{font-family:'Lilita One',cursive;text-align:center;font-size:1.7rem;background:linear-gradient(135deg,#ff6b6b,#ffd93d,#6bcb77);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:3px}
+h1{font-family:'Cherry Bomb One',cursive;text-align:center;font-size:1.7rem;background:linear-gradient(135deg,#ff6b6b,#ffd93d,#6bcb77);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:3px}
 .sub{text-align:center;font-size:.72rem;color:#a78bfa;margin-bottom:7px}
 .screen{display:none}.screen.active{display:block}
 
 #lobby{display:flex;flex-direction:column;align-items:center;gap:10px;padding:8px 0}
 .lbox{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:13px;padding:14px 20px;width:100%;max-width:420px;text-align:center}
-.lbox h2{font-family:'Lilita One',cursive;color:#ffd93d;margin-bottom:9px;font-size:.95rem}
+.lbox h2{font-family:'Cherry Bomb One',cursive;color:#ffd93d;margin-bottom:9px;font-size:.95rem}
 .cgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:7px 0}
 .ccard{background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.1);border-radius:9px;padding:7px 3px;cursor:pointer;transition:all .2s;text-align:center}
 .ccard:hover{border-color:#a78bfa;transform:translateY(-2px)}
 .ccard.sel{border-color:#ffd93d;background:rgba(255,211,61,.15)}
 .ccard .ce{font-size:1.7rem;display:block;margin-bottom:2px}
-.ccard .cn{font-weight:700;color:#e2e8f0;font-size:.67rem}
-input[type=text]{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);border-radius:7px;color:#fff;padding:6px 11px;font-size:.88rem;font-family:'Nunito',sans-serif;outline:none;width:120px}
+.ccard .cn{font-family:'Playwrite FR Moderne',sans-serif;}
+input[type=text]{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);border-radius:7px;color:#fff;padding:6px 11px;font-size:.88rem;font-family:'Playwrite FR Moderne',sans-serif;outline:none;width:120px}
 input[type=text]::placeholder{color:rgba(255,255,255,.4)}
-.btn{background:linear-gradient(135deg,#7c3aed,#a78bfa);border:none;border-radius:8px;color:#fff;padding:7px 15px;font-family:'Lilita One',cursive;font-size:.88rem;cursor:pointer;transition:transform .1s}
+.btn{background:linear-gradient(135deg,#7c3aed,#a78bfa);border:none;border-radius:8px;color:#fff;padding:7px 15px;font-family:'Cherry Bomb One',cursive;font-size:.88rem;cursor:pointer;transition:transform .1s}
 .btn:hover{transform:scale(1.05)}.btn:active{transform:scale(.97)}
 .btn.g{background:linear-gradient(135deg,#059669,#6bcb77)}
 .btn.r{background:linear-gradient(135deg,#dc2626,#f87171)}
@@ -32,19 +47,19 @@ input[type=text]::placeholder{color:rgba(255,255,255,.4)}
 .hud{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;gap:5px}
 .phud{flex:1;background:rgba(255,255,255,.06);border-radius:9px;padding:5px 9px}
 .phud.p1{border-left:3px solid #60a5fa}.phud.p2{border-right:3px solid #f87171;text-align:right}
-.pname{font-family:'Lilita One',cursive;font-size:.75rem;margin-bottom:2px}
+.pname{font-family:'Playwrite FR Moderne',sans-serif;font-size:.75rem;margin-bottom:2px}
 .p1 .pname{color:#60a5fa}.p2 .pname{color:#f87171}
 .hpw{background:rgba(0,0,0,.4);border-radius:4px;height:8px;overflow:hidden;margin-bottom:2px}
 .hpb{height:100%;border-radius:4px;transition:width .4s}
 .p1 .hpb{background:linear-gradient(90deg,#3b82f6,#60a5fa)}
 .p2 .hpb{background:linear-gradient(270deg,#ef4444,#f87171);float:right}
-.hpt{font-size:.62rem;color:#94a3b8}
-.turn-ind{text-align:center;font-family:'Lilita One',cursive;font-size:.82rem;padding:5px 11px;border-radius:16px;min-width:100px}
+.hpt{font-family:'Playwrite FR Moderne',sans-serif;font-size:.6rem;color:#94a3b8;}
+.turn-ind{text-align:center;font-family:'Playwrite FR Moderne',sans-serif;font-size:.82rem;padding:5px 11px;border-radius:16px;min-width:100px}
 .tp1{background:rgba(96,165,250,.2);color:#60a5fa;border:1px solid #3b82f6}
 .tp2{background:rgba(248,113,113,.2);color:#f87171;border:1px solid #ef4444}
 
 #pbar{display:flex;align-items:center;justify-content:center;gap:8px;background:rgba(0,0,0,.35);border-radius:9px;padding:5px 12px;margin-bottom:6px;font-size:.78rem}
-.ps{padding:3px 10px;border-radius:14px;font-family:'Lilita One',cursive;font-size:.72rem;opacity:.3;transition:all .3s}
+.ps{padding:3px 10px;border-radius:14px;font-family:'Playwrite FR Moderne',sans-serif;font-size:.72rem;opacity:.3;transition:all .3s}
 .ps.active{opacity:1;transform:scale(1.1)}
 .ps1{background:rgba(96,165,250,.2);color:#60a5fa;border:1px solid #3b82f6}
 .ps2{background:rgba(255,211,61,.2);color:#ffd93d;border:1px solid #ffd93d}
@@ -56,7 +71,7 @@ input[type=text]::placeholder{color:rgba(255,255,255,.4)}
 #bot{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.05);border-radius:9px;padding:6px 11px;margin-bottom:6px;gap:8px;flex-wrap:wrap}
 #aimtxt{font-size:.75rem;color:#94a3b8;flex:1}
 .items-row{display:flex;gap:5px}
-.ibtn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:6px;padding:3px 8px;font-size:.72rem;cursor:pointer;color:#fff;font-family:'Nunito',sans-serif;transition:all .15s}
+.ibtn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:6px;padding:3px 8px;font-size:.72rem;cursor:pointer;color:#fff;font-family:'Playwrite FR Moderne',sans-serif;transition:all .15s}
 .ibtn:hover:not(:disabled){background:rgba(255,255,255,.18);transform:scale(1.05)}
 .ibtn:disabled{opacity:.3;cursor:not-allowed}
 .ic{font-size:.58rem;color:#94a3b8;display:block;text-align:center}
@@ -67,10 +82,10 @@ input[type=text]::placeholder{color:rgba(255,255,255,.4)}
 #wins{text-align:center;padding:24px 16px}
 .we{font-size:4rem;animation:bounce .6s infinite alternate}
 @keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-12px)}}
-.wt{font-family:'Lilita One',cursive;font-size:1.7rem;background:linear-gradient(135deg,#ffd93d,#ff6b6b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin:9px 0 4px}
+.wt{font-family:'Playwrite FR Moderne',sans-serif;font-size:1.7rem;background:linear-gradient(135deg,#ffd93d,#ff6b6b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin:9px 0 4px}
 
 #wscr{text-align:center;padding:28px 16px}
-.rc{font-family:'Lilita One',cursive;font-size:2rem;color:#ffd93d;letter-spacing:6px;background:rgba(255,211,61,.1);border:2px dashed #ffd93d;border-radius:11px;padding:10px 22px;margin:10px auto;display:inline-block}
+.rc{font-family:'Playwrite FR Moderne',sans-serif;font-size:2rem;color:#ffd93d;letter-spacing:6px;background:rgba(255,211,61,.1);border:2px dashed #ffd93d;border-radius:11px;padding:10px 22px;margin:10px auto;display:inline-block}
 .pulse{animation:pulse 1.5s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
 
 .stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
@@ -114,7 +129,7 @@ input[type=text]::placeholder{color:rgba(255,255,255,.4)}
   <div id="sw" class="screen">
     <div id="wscr">
       <div style="font-size:2.5rem">⏳</div>
-      <h2 style="font-family:'Lilita One',cursive;font-size:1.1rem;margin:7px 0">Đợi bạn bè...</h2>
+      <h2 style="font-family:'Cherry Bomb One',cursive;font-size:1.1rem;margin:7px 0">Đợi bạn bè...</h2>
       <p style="color:#94a3b8;font-size:.78rem;margin-bottom:4px">Gửi mã này cho đối thủ:</p>
       <div class="rc" id="drc">????</div>
       <p class="pulse" style="color:#94a3b8;font-size:.72rem;margin-top:7px">Đang chờ người chơi 2...</p>
@@ -506,7 +521,7 @@ function render(){
   G.efx.forEach(e=>{
     e.life--;e.y-=.7;
     ctx.save();ctx.globalAlpha=e.life/60;
-    ctx.font=`bold ${e.sz||21}px 'Lilita One',cursive`;
+    ctx.font=`bold ${e.sz||21}px cursive`;
     ctx.fillStyle=e.col||'#ffd93d';ctx.textAlign='center';
     ctx.strokeStyle='rgba(0,0,0,.8)';ctx.lineWidth=3;
     ctx.strokeText(e.txt,e.x,e.y);ctx.fillText(e.txt,e.x,e.y);ctx.restore();
@@ -535,7 +550,7 @@ function drawChar(pid){
   ctx.restore();
   // HP bar trên đầu
   ctx.save();
-  ctx.font='bold '+Math.max(10,fs*0.2)+'px Nunito,sans-serif';
+  ctx.font='bold '+Math.max(10,fs*0.2)+'px Playwrite FR Moderne,sans-serif';
   ctx.textAlign='center';
   ctx.fillStyle=pid===1?'#60a5fa':'#f87171';
   ctx.fillText('❤️ '+p.hp,cx,GY-fs*0.9);
@@ -581,7 +596,7 @@ function drawAimLine(){
   ctx.stroke();ctx.shadowBlur=0;
   // Góc
   ctx.fillStyle='rgba(255,255,255,.8)';
-  ctx.font='bold '+Math.max(11,Math.min(canvas.width*0.015,14))+'px Nunito,sans-serif';ctx.textAlign='center';
+  ctx.font='bold '+Math.max(11,Math.min(canvas.width*0.015,14))+'px Playwrite FR Moderne,sans-serif';ctx.textAlign='center';
   ctx.fillText(Math.round(G.angle)+'°',fx+(dir*65),fy-8);
   ctx.restore();
 }
@@ -629,7 +644,7 @@ function drawPowerRing(){
   }
   ctx.restore();
   // Text năng lượng
-  ctx.fillStyle='#fff';ctx.font='bold 13px Nunito,sans-serif';ctx.textAlign='center';
+  ctx.fillStyle='#fff';ctx.font='bold 13px Playwrite FR Moderne,sans-serif';ctx.textAlign='center';
   ctx.fillText(Math.round(G.power)+'%',0,R+20);
   ctx.restore();
 }
@@ -721,7 +736,7 @@ function playAgain(){
 function goLobby(){cancelAnimationFrame(RAF);G.selChar={1:null,2:null};buildGrid();showS('sl');}
 function showS(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');if(id==='sg'){updateTurnUI();updatePhase();}}
 function addLog(m){const l=document.getElementById('blog');const d=document.createElement('div');d.className='le';d.textContent=m;l.appendChild(d);l.scrollTop=l.scrollHeight;while(l.children.length>20)l.removeChild(l.firstChild);}
-function msg(m){const el=document.createElement('div');el.style.cssText='position:fixed;top:14px;left:50%;transform:translateX(-50%);background:#7c3aed;color:#fff;padding:8px 16px;border-radius:9px;font-family:Nunito,sans-serif;font-weight:700;z-index:9999';el.textContent=m;document.body.appendChild(el);setTimeout(()=>el.remove(),2000);}
+function msg(m){const el=document.createElement('div');el.style.cssText='position:fixed;top:14px;left:50%;transform:translateX(-50%);background:#7c3aed;color:#fff;padding:8px 16px;border-radius:9px;font-family:cursive;font-weight:700;z-index:9999';el.textContent=m;document.body.appendChild(el);setTimeout(()=>el.remove(),2000);}
 
 // ── INIT ──
 (()=>{const c=document.getElementById('stars');for(let i=0;i<55;i++){const s=document.createElement('div');s.className='star';const z=Math.random()*2.5+.5;s.style.cssText=`width:${z}px;height:${z}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${Math.random()*3+1}s;animation-delay:${Math.random()*3}s`;c.appendChild(s);}})();
@@ -730,7 +745,7 @@ function buildGrid(){
   CHARS.forEach(ch=>{
     const d=document.createElement('div');
     d.className='ccard'+(G.selChar[1]?.id===ch.id?' sel':'');
-    d.innerHTML=`<span class="ce">${ch.emoji}</span><div class="cn">${ch.name}</div><div style="font-size:.6rem;color:#94a3b8">HP:${ch.hp}</div>`;
+    d.innerHTML=`<span class="ce">${ch.emoji}</span><div class="cn">${ch.name}</div><div class="hpt">HP:${ch.hp}</div>`;
     d.onclick=()=>{G.selChar[1]=ch;if(G.mode==='local')G.selChar[2]=CHARS[(CHARS.indexOf(ch)+1)%CHARS.length];buildGrid();};
     g.appendChild(d);
   });
